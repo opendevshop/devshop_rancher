@@ -18,7 +18,6 @@ class hostingService_rancher_server extends hostingService_rancher {
 
   function form(&$form) {
     parent::form($form);
-    dsm($this);
 
     $form['api_username'] = array(
       '#title' => t('Username (API Access Key)'),
@@ -40,7 +39,9 @@ class hostingService_rancher_server extends hostingService_rancher {
 
   public function save($node) {
     variable_set("devshop_rancher_server_{$node->title}_api_username", $node->services['rancher']->api_username);
-    variable_set("devshop_rancher_server_{$node->title}_api_secret", $node->services['rancher']->api_secret);
+    if (!empty($node->services['rancher']->api_secret)) {
+      variable_set("devshop_rancher_server_{$node->title}_api_secret", $node->services['rancher']->api_secret);
+    }
     parent::save($node);
   }
 
