@@ -18,6 +18,17 @@ class hostingService_rancher_server extends hostingService_rancher {
     return 8000;
   }
 
+  public function view(&$render) {
+    unset($render['port']);
+
+    $url = "http://" . $this->server->title . ':' . $this->default_port();
+    $render['port'] = array(
+      '#type' => 'item',
+      '#title' => t('Rancher URL'),
+      '#value' => l($url, $url),
+    );
+  }
+
   function form(&$form) {
     parent::form($form);
 
@@ -78,19 +89,31 @@ class hostingService_rancher_server extends hostingService_rancher {
   public function validate(&$node, &$form) {
     parent::validate($node, $form);
 
+    if ($this->verify()) {
+      drupal_set_message(t('We have successfully connected to your Rancher server!'));
+    } else {
+      form_set_error('api_username', t('Unable to connect to Rancher Server. Check your credentials and try again.'));
+    }
+  }
+
+  /**
+   * Verify that the rancher server API is accessible.
+   *
+   * @param $node
+   * @param $form
+   */
+  public function verify() {
+
     // Check for API access
-    $client = new Client('http://' . $node->title . ':' . $this->default_port());
+    $client = new Client('http://' . $this->server->title . ':' . $this->default_port());
 
     try {
       $request = $client->get('/v1');
       $request->setAuth($this->api_username, $this->api_secret);
       $response = $request->send();
-
-      drupal_set_message(t('We have successfully connected to your Rancher server!'));
-
+      return TRUE;
     } catch (ClientErrorResponseException $e) {
-      drupal_set_message(t('Unable to connect to Rancher Server. Check your credentials and try again.'), 'error');
-      form_set_error('api_username', $e->getMessage());
+      return FALSE;
     }
   }
 }
