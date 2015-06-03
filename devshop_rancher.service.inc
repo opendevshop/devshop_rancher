@@ -37,6 +37,10 @@ class hostingService_rancher_server extends hostingService_rancher {
     }
   }
 
+  /**
+   * Saves the server API credentials as variables.
+   * @param $node
+   */
   public function save($node) {
     variable_set("devshop_rancher_server_{$node->title}_api_username", $node->services['rancher']->api_username);
     if (!empty($node->services['rancher']->api_secret)) {
@@ -45,6 +49,9 @@ class hostingService_rancher_server extends hostingService_rancher {
     parent::save($node);
   }
 
+  /**
+   * Loads the server API credentials into the service.
+   */
   public function load() {
     parent::load();
     $this->setValues(array(
@@ -54,8 +61,14 @@ class hostingService_rancher_server extends hostingService_rancher {
   }
 
 
+  /**
+   * Validates the server API credentials.
+   *
+   * @param $node
+   * @param $form
+   */
   public function validate(&$node, &$form) {
-    parent::form($form);
+    parent::validate($node, $form);
   }
 }
 
