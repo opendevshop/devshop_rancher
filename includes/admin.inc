@@ -1,5 +1,7 @@
 <?php
 
+use GuzzleHttp\Client;
+
 /**
  * Rancher settings form.
  * @return array()
@@ -24,5 +26,21 @@ function devshop_rancher_settings_form(){
     '#description' => t('Rancher API secret key.'),
     '#default_value' => variable_get('devshop_rancher_api_secret', ''),
   );
+
+  $form['#validate'] = array(
+    'devshop_rancher_settings_form_validate',
+  );
+
   return system_settings_form($form);
+}
+
+/**
+ * Validator for rancher settings.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function devshop_rancher_settings_form_validate(&$form, &$form_state) {
+
+  form_set_error('devshop_rancher_server_url', t('Wrong!'));
 }
