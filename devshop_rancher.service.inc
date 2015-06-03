@@ -2,6 +2,8 @@
 
 module_load_include('service.inc', 'hosting_web_server');
 
+use Guzzle\Http\Client;
+use Guzzle\Http\Exception\ClientErrorResponseException;
 
 class hostingService_rancher extends hostingService {
   public $service = 'rancher';
@@ -33,6 +35,12 @@ class hostingService_rancher_server extends hostingService_rancher {
         '#description' => t('Rancher API secret key.'),
         '#default_value' => $this->api_secret,
         '#required' => TRUE,
+      );
+    }
+    else {
+      $form['api_secret'] = array(
+        '#type' => 'value',
+        '#value' => $this->api_secret,
       );
     }
   }
@@ -69,6 +77,21 @@ class hostingService_rancher_server extends hostingService_rancher {
    */
   public function validate(&$node, &$form) {
     parent::validate($node, $form);
+
+    // Check for API access
+    $client = new Client('http://' . $node->title . ':' . $this->default_port());
+
+    try {
+      $request = $client->get('/v1');
+      $request->setAuth($this->api_username, $this->api_secret);
+      $response = $request->send();
+
+      drupal_set_message(t('We have successfully connected to your Rancher server!'));
+
+    } catch (ClientErrorResponseException $e) {
+      drupal_set_message(t('Unable to connect to Rancher Server. Check your credentials and try again.'), 'error');
+      form_set_error('api_username', $e->getMessage());
+    }
   }
 }
 
