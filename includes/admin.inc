@@ -1,6 +1,7 @@
 <?php
 
-use GuzzleHttp\Client;
+use Guzzle\Http\Client;
+use Guzzle\Http\Exception\ClientErrorResponseException;
 
 /**
  * Rancher settings form.
@@ -42,5 +43,25 @@ function devshop_rancher_settings_form(){
  */
 function devshop_rancher_settings_form_validate(&$form, &$form_state) {
 
-  form_set_error('devshop_rancher_server_url', t('Wrong!'));
+  // Check for API access
+  $client = new Client($form_state['values']['devshop_rancher_server_url']);
+
+  // If no secret is present, load from variables.
+  if (empty($form_state['values']['devshop_rancher_api_secret'])) {
+    $form_state['values']['devshop_rancher_api_secret'] = variable_get('devshop_rancher_api_secret', '');
+  }
+
+  try {
+    $request = $client->get('/v1');
+    $request->setAuth($form_state['values']['devshop_rancher_api_username'],
+      $form_state['values']['devshop_rancher_api_secret']);
+
+    $response = $request->send();
+
+    drupal_set_message(t('We have successfully connected to your Rancher server!'));
+
+  } catch (ClientErrorResponseException $e) {
+    drupal_set_message(t('Unable to connect to Rancher Server. Check your credentials and try again.'));
+    form_set_error('devshop_rancher_api_username', $e->getMessage());
+  }
 }
