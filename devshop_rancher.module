@@ -11,13 +11,28 @@ require 'vendor/autoload.php';
 function devshop_rancher_menu() {
   $items = array();
 
-  $items['admin/hosting/devshop/rancher'] = array(
+  $items['admin/hosting/rancher'] = array(
     'title' => 'Rancher',
     'description' => 'DevShop Rancher Integration Settings',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('devshop_rancher_settings_form'),
     'access arguments' => array('administer projects'),
     'file' => 'includes/admin.inc',
+    'type' => MENU_LOCAL_TASK,
+  );
+
+  $items['admin/hosting/rancher/settings'] = array(
+    'title' => 'Settings',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+
+  $items['admin/hosting/rancher/hosts'] = array(
+    'title' => 'Hosts',
+    'description' => 'DevShop Rancher Integration Settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('devshop_rancher_hosts_form'),
+    'access arguments' => array('administer projects'),
+    'file' => 'includes/hosts.inc',
     'type' => MENU_LOCAL_TASK,
   );
 
