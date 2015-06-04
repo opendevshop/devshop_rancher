@@ -58,8 +58,6 @@ function devshop_rancher_hosting_service() {
   return array(
     'agent' => 'rancher',
     'server' => 'rancher',
-    'rancher_web' => 'http',
-    'rancher_database' => 'db',
   );
 }
 

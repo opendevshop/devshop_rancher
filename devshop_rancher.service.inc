@@ -136,29 +136,3 @@ class hostingService_rancher_agent extends hostingService {
   public $type = 'rancher';
 
 }
-
-/**
- * Class hostingService_http_rancher
- *
- * Rancher for HTTP Server
- */
-class hostingService_http_rancher_web extends hostingService_http {
-  public $type = 'rancher';
-
-  function form(&$form) {
-    parent::form($form);
-  }
-}
-
-/**
- * Class hostingService_http_rancher
- *
- * Rancher for HTTP Server
- */
-class hostingService_db_rancher_database extends hostingService_db {
-  public $type = 'rancher';
-
-  function form(&$form) {
-    parent::form($form);
-  }
-}
