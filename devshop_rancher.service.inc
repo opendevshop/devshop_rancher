@@ -56,7 +56,6 @@ class hostingService_rancher_server extends hostingService_rancher {
         '#type' => 'password',
         '#description' => t('Rancher API secret key.'),
         '#default_value' => $this->api_secret,
-        '#required' => TRUE,
       );
     }
     else {
