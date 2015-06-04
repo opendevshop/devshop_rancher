@@ -15,4 +15,16 @@ class Provision_Service_db_rancher extends Provision_Service_db {
   function verify_server_cmd() {
     drush_log('Provision_Service_db_rancher::init_server()', 'ok');
   }
+
+  function create_site_database($creds = array()) {
+    return TRUE;
+  }
+
+  function can_create_database() {
+    return TRUE;
+  }
+
+  function can_grant_privileges() {
+    return TRUE;
+  }
 }
