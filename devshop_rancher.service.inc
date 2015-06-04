@@ -1,6 +1,7 @@
 <?php
 
 module_load_include('service.inc', 'hosting_web_server');
+module_load_include('service.inc', 'hosting_db_server');
 
 use Guzzle\Http\Client;
 use Guzzle\Http\Exception\ClientErrorResponseException;
@@ -142,7 +143,20 @@ class hostingService_rancher_agent extends hostingService {
  *
  * Rancher for HTTP Server
  */
-class hostingService_http_rancher extends hostingService_http {
+class hostingService_http_rancher_web extends hostingService_http {
+  public $type = 'rancher';
+
+  function form(&$form) {
+    parent::form($form);
+  }
+}
+
+/**
+ * Class hostingService_http_rancher
+ *
+ * Rancher for HTTP Server
+ */
+class hostingService_db_rancher_database extends hostingService_db {
   public $type = 'rancher';
 
   function form(&$form) {
