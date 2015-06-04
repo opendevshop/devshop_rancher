@@ -6,6 +6,8 @@ class Provision_Service_http_rancher extends Provision_Service_http_public {
 
   function init_server() {
     drush_log('Provision_Service_http_rancher::init_server()', 'ok');
+    parent::init_server();
+    $this->configs['site'][] = 'Provision_Config_Rancher_Site';
   }
 
 
