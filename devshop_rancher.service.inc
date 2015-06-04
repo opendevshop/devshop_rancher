@@ -136,3 +136,21 @@ class hostingService_rancher_agent extends hostingService {
   public $type = 'rancher';
 
 }
+
+/**
+ * Class hostingService_rancher_agent
+ * Base class for rancher agent servers.
+ */
+class hostingService_db_rancher extends hostingService_db {
+  public $type = 'rancher';
+
+}
+
+/**
+ * Class hostingService_rancher_agent
+ * Base class for rancher agent servers.
+ */
+class hostingService_http_rancher extends hostingService_http {
+  public $type = 'rancher';
+
+}

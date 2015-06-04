@@ -58,6 +58,18 @@ function devshop_rancher_hosting_service() {
   return array(
     'agent' => 'rancher',
     'server' => 'rancher',
+    'rancher' => 'db',
+//    'rancher_database' => 'db',
+  );
+}
+
+/**
+ * Implements hook_hosting_service()
+ * @return array
+ */
+function system_hosting_service() {
+  return array(
+    'rancher' => 'http',
   );
 }
 
