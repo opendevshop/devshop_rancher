@@ -16,6 +16,14 @@ class Provision_Service_db_rancher extends Provision_Service_db {
     drush_log('Provision_Service_db_rancher::verify_server_cmd()', 'ok');
   }
 
+  /**
+   * This method is at the core of preparing the site.
+   *
+   * Use this method to trigger the creation of the Rancher environments.
+   *
+   * @param array $creds
+   * @return bool
+   */
   function create_site_database($creds = array()) {
     drush_log('Provision_Service_db_rancher::create_site_database()', 'ok');
     return TRUE;
