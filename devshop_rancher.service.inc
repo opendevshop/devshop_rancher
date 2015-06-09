@@ -32,7 +32,7 @@ class hostingService_rancher_server extends hostingService_rancher {
   public function view(&$render) {
     unset($render['port']);
 
-    $url = "http://" . $this->server->title . ':' . $this->default_port();
+    $url = "http://" . $this->server->title . ':' . $this->port;
     $render['port'] = array(
       '#type' => 'item',
       '#title' => t('Rancher URL'),
@@ -99,23 +99,21 @@ class hostingService_rancher_server extends hostingService_rancher {
   public function validate(&$node, &$form) {
     parent::validate($node, $form);
 
-    if ($this->verify()) {
+    $verify = $this->verify();
+    if ($verify === TRUE) {
       drupal_set_message(t('We have successfully connected to your Rancher server!'));
     } else {
-      form_set_error('api_username', t('Unable to connect to Rancher Server. Check your credentials and try again.'));
+      form_set_error('api_username', t('Unable to connect to Rancher Server:') . $verify->getMessage());
     }
   }
 
   /**
    * Verify that the rancher server API is accessible.
-   *
-   * @param $node
-   * @param $form
    */
   public function verify() {
 
     // Check for API access
-    $client = new Client('http://' . $this->server->title . ':' . $this->default_port());
+    $client = new Client('http://' . $this->server->title . ':' . $this->port);
 
     try {
       $request = $client->get('/v1');
@@ -123,7 +121,9 @@ class hostingService_rancher_server extends hostingService_rancher {
       $response = $request->send();
       return TRUE;
     } catch (ClientErrorResponseException $e) {
-      return FALSE;
+      return $e;
+    } catch (Guzzle\Http\Exception\CurlException $e) {
+      return $e;
     }
   }
 }
