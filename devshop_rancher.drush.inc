@@ -28,6 +28,7 @@ function drush_devshop_rancher_pre_hosting_task() {
     // Load up server node
     $site = $task->ref;
     $server = node_load($site->db_server);
+    $platform = node_load($site->platform);
 
     // Lookup "projects"
     $projects_request = $server->services['rancher']->get('projects');
@@ -78,5 +79,57 @@ function drush_devshop_rancher_pre_hosting_task() {
     else {
       drush_log('Something went wrong when saving environment record.', 'warning');
     }
+
+    // Create Services
+    // @TODO: Devise a service template system.
+    $services = array();
+
+    // Service: database
+    $service = new stdClass();
+    $service->environmentId = $environment_object->id;
+    $service->name = 'database';
+    $service->scale = 0;
+    $service->launchConfig = new stdClass();
+    $service->launchConfig->imageUuid = 'docker:mariadb';
+    $service->launchConfig->environment = new stdClass();
+    $service->launchConfig->environment->MYSQL_ROOT_PASSWORD = provision_password();
+    $service->launchConfig->environment->MYSQL_DATABASE = 'drupal';
+    $service->launchConfig->environment->MYSQL_USER = 'drupal';
+    $service->launchConfig->environment->MYSQL_PASSWORD = 'drupal';
+
+    $service_request = $server->services['rancher']->post("projects/{$project->id}/services", $service);
+    $services['database'] = json_decode($service_request->getBody(TRUE));
+    drush_log("Attempting to create service DATABASE: " . print_r($services['database'], 1), 'ok');
+
+    // Service: app
+    $service = new stdClass();
+    $service->environmentId = $environment_object->id;
+    $service->name = 'app';
+    $service->scale = 0;
+    $service->launchConfig = new stdClass();
+    $service->launchConfig->imageUuid = 'docker:terra/drupal';
+    $service->launchConfig->ports = array(
+      '8080:80/tcp'
+    );
+    $service->launchConfig->dataVolumes = array(
+      "{$platform->publish_path}:/usr/share/nginx/html"
+    );
+
+    $service_request = $server->services['rancher']->post("projects/{$project->id}/services", $service);
+    $services['app'] = json_decode($service_request->getBody(TRUE));
+    drush_log("Attempting to create service APP: " . print_r($services['app'], 1), 'ok');
+
+    // Link "app" to "database"
+    $link = new stdClass();
+    $link->serviceId = $services['db']->id;
+    $link->name = 'db';
+    $server->services['rancher']->post("projects/{$project->id}/services/{$services['app']->id}/?action=addservicelink", $link);
+
+    // @TODO: Service: balance
+    // @TODO: Service: drush
+
+    // Initiate Services
+    $server->services['rancher']->post("projects/{$project->id}/environments/{$environment_object->id}/?action=activateservices", NULL);
+
   }
 }
