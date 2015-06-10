@@ -22,8 +22,10 @@ function drush_devshop_rancher_pre_hosting_task() {
     }
   }
 
-  // On install, create an environment
-  if ($task->task_type == 'install') {
+  // Environment: Install
+  // Create a Rancher Environment
+  // @TODO: Move this stuff to a class.
+  if ($task->task_type == 'install' && isset($task->ref->rancher_server)) {
 
     // Load up server node
     $site = $task->ref;
@@ -160,6 +162,11 @@ function drush_devshop_rancher_pre_hosting_task() {
     $service_response = json_decode($service_request->getBody(TRUE));
 
     drush_log("Attempting to start services: " . print_r($service_response, 1), 'ok');
+
+  }
+
+  // Environment: Delete
+  if ($task->task_type == 'delete' && isset($task->ref->rancher_server)) {
 
   }
 }
