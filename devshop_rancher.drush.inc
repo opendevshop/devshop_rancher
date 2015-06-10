@@ -88,7 +88,7 @@ function drush_devshop_rancher_pre_hosting_task() {
     $service = new stdClass();
     $service->environmentId = $environment_object->id;
     $service->name = 'database';
-    $service->scale = 0;
+    $service->scale = 1;
     $service->launchConfig = new stdClass();
     $service->launchConfig->imageUuid = 'docker:mariadb';
     $service->launchConfig->environment = new stdClass();
@@ -105,7 +105,7 @@ function drush_devshop_rancher_pre_hosting_task() {
     $service = new stdClass();
     $service->environmentId = $environment_object->id;
     $service->name = 'app';
-    $service->scale = 0;
+    $service->scale = 1;
     $service->launchConfig = new stdClass();
     $service->launchConfig->imageUuid = 'docker:terra/drupal';
     $service->launchConfig->ports = array(
@@ -121,15 +121,23 @@ function drush_devshop_rancher_pre_hosting_task() {
 
     // Link "app" to "database"
     $link = new stdClass();
-    $link->serviceId = $services['db']->id;
-    $link->name = 'db';
-    $server->services['rancher']->post("projects/{$project->id}/services/{$services['app']->id}/?action=addservicelink", $link);
+    $link->serviceId = $services['database']->id;
+    $link->name = 'database';
+    $service_request = $server->services['rancher']->post("projects/{$project->id}/services/{$services['app']->id}/?action=addservicelink", $link);
+
+    $service_response = json_decode($service_request->getBody(TRUE));
+
+    drush_log("Attempting to create service link: " . print_r($service_response, 1), 'ok');
 
     // @TODO: Service: balance
     // @TODO: Service: drush
 
-    // Initiate Services
-    $server->services['rancher']->post("projects/{$project->id}/environments/{$environment_object->id}/?action=activateservices", NULL);
+    // Activate Services
+    $obj = new stdClass();
+    $service_request = $server->services['rancher']->post("projects/{$project->id}/environments/{$environment_object->id}/?action=activateservices", $obj);
+    $service_response = json_decode($service_request->getBody(TRUE));
+
+    drush_log("Attempting to start services: " . print_r($service_response, 1), 'ok');
 
   }
 }
