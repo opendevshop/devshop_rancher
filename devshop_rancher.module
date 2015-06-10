@@ -100,4 +100,13 @@ function devshop_rancher_nodeapi(&$node, $op) {
       '#value' => l($node->environment->settings->rancher_object->links->self,  $node->environment->settings->rancher_object->links->self),
     );
   }
+
+  // Load rancher info into site.
+  if ($op == 'load' && $node->type == 'site') {
+    $server = node_load($node->db_server);
+
+    if (isset($server->services['rancher'])) {
+      $node->rancher_server = $server->services['rancher'];
+    }
+  }
 }
