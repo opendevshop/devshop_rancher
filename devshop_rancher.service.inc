@@ -126,6 +126,54 @@ class hostingService_rancher_server extends hostingService_rancher {
       return $e;
     }
   }
+
+  /**
+   * Generic method for getting data from the rancher API.
+   *
+   * @param string $endpoint
+   * @return \Exception|\Guzzle\Http\Exception\ClientErrorResponseException|\Guzzle\Http\Exception\CurlException|\Guzzle\Http\Message\Response
+   */
+  public function get($endpoint = '') {
+
+    // Check for API access
+    $client = new Client('http://' . $this->server->title . ':' . $this->port);
+
+    try {
+      $request = $client->get('/v1/' . $endpoint);
+      $request->setAuth($this->api_username, $this->api_secret);
+      $response = $request->send();
+      return $response;
+    } catch (ClientErrorResponseException $e) {
+      return $e;
+    } catch (Guzzle\Http\Exception\CurlException $e) {
+      return $e;
+    }
+  }
+
+  /**
+   * Generic function for posting to Rancher API.
+   *
+   * @param $endpoint
+   * @param $object
+   * @return \Exception|\Guzzle\Http\Exception\ClientErrorResponseException|\Guzzle\Http\Exception\CurlException|\Guzzle\Http\Message\Response
+   */
+  public function post($endpoint, $object) {
+
+    // Check for API access
+    $client = new Client('http://' . $this->server->title . ':' . $this->port);
+
+    try {
+      $body = json_encode($object);
+      $request = $client->post('/v1/' . $endpoint, NULL, $body);
+      $request->setAuth($this->api_username, $this->api_secret);
+      $response = $request->send();
+      return $response;
+    } catch (ClientErrorResponseException $e) {
+      return $e;
+    } catch (Guzzle\Http\Exception\CurlException $e) {
+      return $e;
+    }
+  }
 }
 
 /**
