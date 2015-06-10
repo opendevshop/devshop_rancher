@@ -127,6 +127,31 @@ function drush_devshop_rancher_pre_hosting_task() {
     drush_log("Attempting to create service link: " . print_r($service_response, 1), 'ok');
 
     // @TODO: Service: balance
+    // Service: balance
+    $service = new stdClass();
+    $service->environmentId = $environment_object->id;
+    $service->name = 'balance';
+    $service->scale = 1;
+    $service->launchConfig = new stdClass();
+    $service->launchConfig->ports = array(
+      "80:80",
+    );
+
+    $service_request = $server->services['rancher']->post("projects/{$project->id}/loadbalancerservices", $service);
+    $services['balance'] = json_decode($service_request->getBody(TRUE));
+    drush_log("Attempting to create service BALANCE: " . print_r($services['balance'], 1), 'ok');
+
+    // Link "app" to "balance"
+    $link = new stdClass();
+    $link->serviceId = $services['app']->id;
+    $link->name = 'app';
+    $service_request = $server->services['rancher']->post("projects/{$project->id}/loadbalancerservices/{$services['balance']->id}/?action=addservicelink", $link);
+
+    $service_response = json_decode($service_request->getBody(TRUE));
+
+    drush_log("Attempting to create service link for BALANCE: " . print_r($service_response, 1), 'ok');
+
+
     // @TODO: Service: drush
 
     // Activate Services
