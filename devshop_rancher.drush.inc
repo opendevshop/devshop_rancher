@@ -108,9 +108,6 @@ function drush_devshop_rancher_pre_hosting_task() {
     $service->scale = 1;
     $service->launchConfig = new stdClass();
     $service->launchConfig->imageUuid = 'docker:terra/drupal';
-    $service->launchConfig->ports = array(
-      '8888:80/tcp'
-    );
     $service->launchConfig->dataVolumes = array(
       "{$platform->publish_path}:/usr/share/nginx/html"
     );
