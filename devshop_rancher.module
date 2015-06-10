@@ -89,3 +89,15 @@ function devshop_rancher_hosting_servers_titles_alter(&$servers, $service) {
   }
 }
 
+/**
+ * Implements hook_nodeapi().
+ */
+function devshop_rancher_nodeapi(&$node, $op) {
+  if ($op == 'view' && $node->type == 'site') {
+    $node->content['rancher'] = array(
+      '#type' => 'item',
+      '#title' => 'Rancher object',
+      '#value' => l($node->environment->settings->rancher_object->links->self,  $node->environment->settings->rancher_object->links->self),
+    );
+  }
+}
