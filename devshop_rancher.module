@@ -82,8 +82,8 @@ function devshop_rancher_hosting_servers_titles_alter(&$servers, $service) {
 
   // Load up all rancher agent servers.
   if ($service == 'http' || $service == 'db') {
-    $result = db_query("SELECT n.nid, n.title FROM {node} n INNER JOIN {hosting_service} s ON n.vid = s.vid AND s.available = 1 AND s.service = '%s'", 'rancher');
-    while ($server = db_fetch_object($result)) {
+    $results = db_query("SELECT n.nid, n.title FROM {node} n INNER JOIN {hosting_service} s ON n.vid = s.vid AND s.available = 1 AND s.service = :service", array(':service' => 'rancher'));
+    foreach ($results as $server) {
       $servers[$server->nid] = $server->title;
     }
   }
