@@ -43,8 +43,3 @@ class ComposerAutoloaderInit175d8872978311bfdcc7ce4932f8f460
         return $loader;
     }
 }
-
-function composerRequire175d8872978311bfdcc7ce4932f8f460($file)
-{
-    require $file;
-}
