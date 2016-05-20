@@ -1,5 +1,5 @@
 name = DevShop Rancher
 description = Integrate with Rancher for hosting services.
-core = 6.x
+core = 7.x
 package = DevShop
 dependencies[] = devshop_projects
