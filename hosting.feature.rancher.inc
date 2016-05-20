@@ -11,7 +11,7 @@ function devshop_rancher_hosting_feature() {
     $features['rancher'] = array(
         'title' => t('Rancher Services'),
         'description' => t('Use Rancher for Aegir Services.'),
-        'status' => HOSTING_FEATURE_REQUIRED,
+        'status' => HOSTING_FEATURE_DISABLED,
         'module' => 'devshop_rancher',
         'group' => 'advanced',
     );
