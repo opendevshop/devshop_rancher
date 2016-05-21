@@ -4,13 +4,6 @@ class Provision_Service_http_rancherhttp extends Provision_Service_http_apache_s
   protected $application_name = 'rancherdb';
   protected $has_restart_cmd = FALSE;
 
-  function init_server() {
-    drush_log('Provision_Service_http_rancher::init_server()', 'devshop_log');
-    parent::init_server();
-    $this->configs['site'][] = 'Provision_Config_Rancher_Site';
-  }
-
-
   function verify_server_cmd() {
     drush_log('Provision_Service_http_rancher::verify_server_cmd()', 'devshop_log');
   }
