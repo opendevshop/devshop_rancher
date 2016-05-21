@@ -36,7 +36,7 @@ class hostingService_rancher_server extends hostingService_rancher {
     $render['port'] = array(
       '#type' => 'item',
       '#title' => t('Rancher URL'),
-      '#value' => l($url, $url),
+      '#markup' => l($url, $url),
     );
   }
 
