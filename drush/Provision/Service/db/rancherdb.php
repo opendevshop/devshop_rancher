@@ -6,14 +6,12 @@ class Provision_Service_db_rancherdb extends Provision_Service_db_mysql {
 
   function init_server() {
     parent::init_server();
-    drush_log('Provision_Service_db_rancher::init_server()', 'devshop_log');
   }
 
   /**
    * Verifies database connection and commands
    */
   function verify_server_cmd() {
-    drush_log('Provision_Service_db_rancher::verify_server_cmd()', 'devshop_log');
   }
 
   /**
@@ -36,7 +34,6 @@ class Provision_Service_db_rancherdb extends Provision_Service_db_mysql {
    */
   function create_site_database($creds = array()) {
     drush_log('Provision_Service_db_rancher::create_site_database()', 'devshop_log');
-    drush_log('@TODO: This is the place to create the new Rancher Service.', 'devshop_log');
     return TRUE;
   }
 

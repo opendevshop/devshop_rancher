@@ -6,8 +6,14 @@
  * This class will publish the config files to remote
  * servers automatically.
  */
-class Provision_Config_Rancher extends Provision_Config {
-  function write() {
+class Provision_Config_RancherConfig extends Provision_Config {
+
+    private function render_template($template, $variables) {
+      return 'docker yaml?';
+    }
+
+
+    function write() {
     parent::write();
 //    $this->data['server']->sync($this->filename());
   }
