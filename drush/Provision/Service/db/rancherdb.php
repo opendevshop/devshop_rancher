@@ -6,14 +6,14 @@ class Provision_Service_db_rancherdb extends Provision_Service_db_mysql {
 
   function init_server() {
     parent::init_server();
-    drush_log('Provision_Service_db_rancher::init_server()', 'ok');
+    drush_log('Provision_Service_db_rancher::init_server()', 'devshop_log');
   }
 
   /**
    * Verifies database connection and commands
    */
   function verify_server_cmd() {
-    drush_log('Provision_Service_db_rancher::verify_server_cmd()', 'ok');
+    drush_log('Provision_Service_db_rancher::verify_server_cmd()', 'devshop_log');
   }
 
   /**
@@ -25,17 +25,25 @@ class Provision_Service_db_rancherdb extends Provision_Service_db_mysql {
    * @return bool
    */
   function create_site_database($creds = array()) {
-    drush_log('Provision_Service_db_rancher::create_site_database()', 'ok');
+    drush_log('Provision_Service_db_rancher::create_site_database()', 'devshop_log');
     return TRUE;
   }
 
   function can_create_database() {
-    drush_log('Provision_Service_db_rancher::can_create_database()', 'ok');
+    drush_log('Provision_Service_db_rancher::can_create_database()', 'devshop_log');
     return TRUE;
   }
 
   function can_grant_privileges() {
-    drush_log('Provision_Service_db_rancher::can_grant_privileges()', 'ok');
+    drush_log('Provision_Service_db_rancher::can_grant_privileges()', 'devshop_log');
     return TRUE;
+  }
+
+  /**
+   * Sync filesystem changes to the server hosting this service.
+   */
+  function sync($path = NULL, $additional_options = array()) {
+    drush_log('Provision_Service_db_rancher::sync()', 'devshop_log');
+//    return $this->server->sync($path, $additional_options);
   }
 }
