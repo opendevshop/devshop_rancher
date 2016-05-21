@@ -99,7 +99,11 @@ class hostingService_rancher_server extends hostingService_rancher {
   public function validate(&$node, &$form, &$form_state) {
     parent::validate($node, $form, $form_state);
 
-    $verify = $this->verify($node, $form);
+    // On create, $this->server does not exist yet.
+    if (empty($this->server)) {
+      $this->server = $node;
+    }
+    $verify = $this->verify();
     if ($verify === TRUE) {
       drupal_set_message(t('We have successfully connected to your Rancher server!'));
     } else {
@@ -110,10 +114,10 @@ class hostingService_rancher_server extends hostingService_rancher {
   /**
    * Verify that the rancher server API is accessible.
    */
-  public function verify($node, $form) {
+  public function verify() {
 
     // Check for API access'
-    $client = new Client('http://' . $node->title . ':' . $this->port);
+    $client = new Client('http://' . $this->server->title . ':' . $this->port);
 
     try {
       $request = $client->get('/v1');
