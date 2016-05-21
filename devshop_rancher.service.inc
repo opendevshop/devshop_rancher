@@ -195,7 +195,24 @@ class hostingService_rancher_agent extends hostingService {
  */
 class hostingService_db_rancherdb extends hostingService_db_mysql {
   public $type = 'rancherdb';
+  public $name = 'Rancher: MySQL';
 
+  function form(&$form) {
+    parent::form($form);
+    $form['note'] = array(
+      '#markup' => t('Your Databases will be configured automatically.'),
+      '#prefix' => '<p>',
+      '#suffix' => '</p>',
+    );
+    $form['db_user'] = array(
+      '#type' => 'value',
+      '#value' => isset($this->db_user)? $this->db_user: 'aegir_root',
+    );
+    $form['db_passwd'] = array(
+      '#type' => 'value',
+      '#value' => isset($this->db_passwd)? $this->db_passwd: user_password(32),
+    );
+  }
 }
 
 /**
@@ -204,5 +221,6 @@ class hostingService_db_rancherdb extends hostingService_db_mysql {
  */
 class hostingService_http_rancherhttp extends hostingService_http_apache_ssl {
   public $type = 'rancherhttp';
+  public $name = 'Rancher: Apache SSL';
 
 }
