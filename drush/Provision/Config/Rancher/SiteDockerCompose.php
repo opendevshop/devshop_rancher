@@ -5,7 +5,7 @@
  */
 class Provision_Config_Rancher_SiteDockerCompose extends Provision_Config_RancherConfig {
 
-  public $template = 'docker-compose.yml.php';
+  public $template = '';
   public $description = 'docker compose file for this environment.';
 
   function filename() {
