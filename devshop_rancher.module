@@ -57,6 +57,8 @@ function devshop_rancher_hosting_service_type() {
 function devshop_rancher_hosting_service() {
   return array(
     'server' => 'rancher',
+    'rancherdb' => 'db',
+    'rancherhttp' => 'http',
   );
 }
 
@@ -66,14 +68,14 @@ function devshop_rancher_hosting_service() {
  * Used to make the Rancher server appear in the Web Server select list.
  */
 function devshop_rancher_hosting_servers_titles_alter(&$servers, $service) {
-
-  // Load up all rancher agent servers.
-  if ($service == 'http' || $service == 'db') {
-    $results = db_query("SELECT n.nid, n.title FROM {node} n INNER JOIN {hosting_service} s ON n.vid = s.vid AND s.available = 1 AND s.service = :service", array(':service' => 'rancher'));
-    foreach ($results as $server) {
-      $servers[$server->nid] = $server->title;
-    }
-  }
+//
+//  // Load up all rancher agent servers.
+//  if ($service == 'http' || $service == 'db') {
+//    $results = db_query("SELECT n.nid, n.title FROM {node} n INNER JOIN {hosting_service} s ON n.vid = s.vid AND s.available = 1 AND s.service = :service", array(':service' => 'rancher'));
+//    foreach ($results as $server) {
+//      $servers[$server->nid] = $server->title;
+//    }
+//  }
 }
 
 /**
