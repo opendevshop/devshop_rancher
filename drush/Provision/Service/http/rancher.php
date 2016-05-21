@@ -1,7 +1,7 @@
 <?php
 
-class Provision_Service_http_rancher extends Provision_Service_http_public {
-  protected $application_name = 'rancher';
+class Provision_Service_http_rancherhttp extends Provision_Service_http_apache_ssl {
+  protected $application_name = 'rancherdb';
   protected $has_restart_cmd = FALSE;
 
   function init_server() {
