@@ -17,6 +17,16 @@ class Provision_Service_db_rancherdb extends Provision_Service_db_mysql {
   }
 
   /**
+   * We always return true because the new service will not get created until
+   * create_site_database()
+   *
+   * @return bool|\PDO
+   */
+  function connect() {
+    return TRUE;
+  }
+
+  /**
    * This method is at the core of preparing the site.
    *
    * Use this method to trigger the creation of the Rancher environments.
@@ -26,6 +36,7 @@ class Provision_Service_db_rancherdb extends Provision_Service_db_mysql {
    */
   function create_site_database($creds = array()) {
     drush_log('Provision_Service_db_rancher::create_site_database()', 'devshop_log');
+    drush_log('@TODO: This is the place to create the new Rancher Service.', 'devshop_log');
     return TRUE;
   }
 
