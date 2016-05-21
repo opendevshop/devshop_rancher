@@ -96,8 +96,8 @@ class hostingService_rancher_server extends hostingService_rancher {
    * @param $node
    * @param $form
    */
-  public function validate(&$node, &$form) {
-    parent::validate($node, $form);
+  public function validate(&$node, &$form, &$form_state) {
+    parent::validate($node, $form, $form_state);
 
     $verify = $this->verify($node, $form);
     if ($verify === TRUE) {
