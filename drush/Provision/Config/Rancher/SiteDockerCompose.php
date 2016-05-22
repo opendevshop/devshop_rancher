@@ -13,6 +13,103 @@ class Provision_Config_Rancher_SiteDockerCompose extends Provision_Config_Ranche
     drush_log('Writing to ' . $filename, 'devshop_log');
     return $filename;
   }
-  
-  
+
+  function generateYml(){
+
+    $project = (object) d('@project_' . $this->context->project)->project;
+    if (empty($project->environments)) {
+      return drush_set_error(DRUSH_APPLICATION_ERROR, dt('No environments found in your project. Save project settings to trigger a project verify.'));
+    }
+    $environment = (object) $project->environments[$this->context->environment];
+
+    $source_root = $environment->repo_root;
+
+    if (!empty($project->drupal_path)) {
+      $document_root_relative = $project->drupal_path;
+      $document_root = $source_root.'/'.$project->drupal_path;
+    } else {
+      $document_root_relative = '';
+      $document_root = $source_root;
+    }
+
+    // @TODO: Load authorized keys from users allowed to acces the project.
+    $ssh_authorized_keys = '';
+
+
+    // Get Virtual Hosts array
+    if (!empty($environment->domains)) {
+      $hosts = implode(',', $environment->domains);
+    }
+
+    $environment_label = $project->name . ':' .
+      $environment->name;
+
+
+    $compose = array();
+    $compose['load'] = array(
+      'image' => 'tutum/haproxy',
+      'environment' => array(
+        'VIRTUAL_HOST' => $hosts,
+      ),
+      'links' => array(
+        'app',
+      ),
+      'expose' => array(
+        '80/tcp',
+      ),
+      'ports' => array(
+        '80',
+      ),
+    );
+    $compose['app'] = array(
+      'image' => 'terra/drupal',
+      'tty' => true,
+      'stdin_open' => true,
+      'links' => array(
+        'database',
+      ),
+      'volumes' => array(
+        "{$environment->repo_root}:/app",
+      ),
+      'environment' => array(
+        'HOST_UID' => posix_getuid(),
+        'HOST_GID' => posix_getgid(),
+        'DOCUMENT_ROOT' => $document_root_relative,
+      ),
+      'expose' => array(
+        '80/tcp',
+      ),
+    );
+    $compose['database'] = array(
+      'image' => 'mariadb',
+      'tty' => true,
+      'stdin_open' => true,
+      'environment' => array(
+        'MYSQL_ROOT_PASSWORD' => 'RANDOMIZEPLEASE',
+        'MYSQL_DATABASE' => 'drupal',
+        'MYSQL_USER' => 'drupal',
+        'MYSQL_PASSWORD' => 'drupal',
+      ),
+    );
+    $compose['drush'] = array(
+      'image' => 'terra/drush',
+      'tty' => true,
+      'stdin_open' => true,
+      'links' => array(
+        'database',
+      ),
+      'ports' => array(
+        '22',
+      ),
+      'volumes' => array(
+        "$document_root:/var/www/html",
+        "$source_root:/source",
+      ),
+      'environment' => array(
+        'AUTHORIZED_KEYS' => $ssh_authorized_keys,
+      ),
+    );
+    
+    return $compose;
+  }
 }

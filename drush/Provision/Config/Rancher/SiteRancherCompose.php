@@ -13,4 +13,10 @@ class Provision_Config_Rancher_SiteRancherCompose extends Provision_Config_Ranch
     drush_log('Writing to ' . $filename, 'devshop_log');
     return $filename;
   }
+
+  function generateYml(){
+    return [
+      'web'
+    ];
+  }
 }
