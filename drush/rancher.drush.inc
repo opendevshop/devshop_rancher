@@ -45,7 +45,4 @@ function drush_rancher_pre_provision_verify() {
       $rancherCompose = new Provision_Config_Rancher_SiteRancherCompose(d()->name, d()->project);
       $rancherCompose->write();
     }
-  else {
-    drush_log('missed', 'devshop_log');
-  }
 }
