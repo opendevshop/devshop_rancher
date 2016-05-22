@@ -2,7 +2,13 @@
 
 class Provision_Service_http_rancherhttp extends Provision_Service_http_apache_ssl {
   protected $application_name = 'rancherhttp';
-  protected $has_restart_cmd = FALSE;
+
+  /**
+   * Restart the service. Happens after config files are written.
+   */
+  function restart() {
+    drush_log('Provision_Service_http_rancherhttp::restart()', 'devshop_log');
+  }
 
   function verify_server_cmd() {
     drush_log('Provision_Service_http_rancherhttp::verify_server_cmd()', 'devshop_log');
