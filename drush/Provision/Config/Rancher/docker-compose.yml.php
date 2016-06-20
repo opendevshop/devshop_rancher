@@ -31,9 +31,9 @@ database:
     stdin_open: true
     environment:
         MYSQL_ROOT_PASSWORD: <?php print $mysql_root_password . "\n" ?>
-        MYSQL_DATABASE: <?php print urlencode($db_name) . "\n"; ?>
-        MYSQL_USER: <?php print urlencode($db_user) . "\n"; ?>
-        MYSQL_PASSWORD:  <?php print urlencode($db_passwd) . "\n"; ?>
+        MYSQL_DATABASE: <?php print urlencode($mysql_credentials['db_name']) . "\n"; ?>
+        MYSQL_USER: <?php print urlencode($mysql_credentials['db_user']) . "\n"; ?>
+        MYSQL_PASSWORD:  <?php print urlencode($mysql_credentials['db_passwd']) . "\n"; ?>
     restart: on-failure
 drush:
     image: terra/drush

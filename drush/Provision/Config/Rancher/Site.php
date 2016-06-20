@@ -28,6 +28,8 @@ class Provision_Config_Rancher_Site extends Provision_Config_Rancher {
       // MySQL Root password, generated.
       $this->data['mysql_root_password'] = provision_password(32);
 
+      $this->data['mysql_credentials'] = $this->generate_site_credentials();
+
       // @TODO: detect automatically.
       $this->data['host_uid'] = '12345';
       $this->data['host_gid'] = '12345';
@@ -41,5 +43,25 @@ class Provision_Config_Rancher_Site extends Provision_Config_Rancher {
 
   function filename() {
     return $this->data['server']->http_app_path . '/' . $this->uri . '/docker-compose.yml';
+  }
+
+  function generate_site_credentials() {
+    $creds = array();
+    // replace with service type
+    $db_type = drush_get_option('db_type', function_exists('mysqli_connect') ? 'mysqli' : 'mysql');
+    // As of Drupal 7 there is no more mysqli type
+    if (drush_drupal_major_version() >= 7) {
+      $db_type = ($db_type == 'mysqli') ? 'mysql' : $db_type;
+    }
+
+    //TODO - this should not be here at all
+    $creds['db_type'] = drush_set_option('db_type', $db_type, 'site');
+    $creds['db_host'] = drush_set_option('db_host', $this->server->remote_host, 'site');
+    $creds['db_port'] = drush_set_option('db_port', $this->server->db_port, 'site');
+    $creds['db_passwd'] = drush_set_option('db_passwd', provision_password(), 'site');
+    $creds['db_name'] = drush_set_option('db_name', 'drupal', 'site');
+    $creds['db_user'] = drush_set_option('db_user', $creds['db_name'], 'site');
+
+    return $creds;
   }
 }
