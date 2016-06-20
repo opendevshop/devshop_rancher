@@ -13,7 +13,10 @@ class Provision_Service_db_rancher extends Provision_Service_db {
    * Verifies database connection and commands
    */
   function verify_server_cmd() {
-    drush_log('Provision_Service_db_rancher::verify_server_cmd()', 'ok');
+
+    // This method usually fires off the other methods can_create_databases and can_grant_privileges.
+    // As long as it doesn't call the parent method, we don't need to override those two.
+    drush_log('Provision_Service_db_rancher::verify_server_cmd()', 'devshop_log');
   }
 
   /**
@@ -50,16 +53,6 @@ class Provision_Service_db_rancher extends Provision_Service_db {
 
     // Remove containers
     d()->service('Process')->process('docker-compose rm -f -v -a', $cwd, dt('Destroying Containers'));
-    
-  }
 
-  function can_create_database() {
-    drush_log('Provision_Service_db_rancher::can_create_database()', 'ok');
-    return TRUE;
-  }
-
-  function can_grant_privileges() {
-    drush_log('Provision_Service_db_rancher::can_grant_privileges()', 'ok');
-    return TRUE;
   }
 }
