@@ -31,12 +31,17 @@ class hostingService_rancher_server extends hostingService_rancher {
 
   public function view(&$render) {
     unset($render['port']);
+    unset($render['title']);
 
     $url = "http://" . $this->server->title . ':' . $this->port;
     $render['port'] = array(
       '#type' => 'item',
       '#title' => t('Rancher URL'),
-      '#value' => l($url, $url),
+      '#markup' => l($url, $url, array(
+        'attributes' => array(
+          'target' => '_blank',
+        ),
+      )),
     );
   }
 
