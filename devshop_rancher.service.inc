@@ -115,10 +115,10 @@ class hostingService_rancher_server extends hostingService_rancher {
   /**
    * Verify that the rancher server API is accessible.
    */
-  public function verify($node, $form) {
+  public function verify() {
 
     // Check for API access'
-    $client = new Client('http://' . $node->title . ':' . $this->port);
+    $client = new Client('http://' . $this->server->title . ':' . $this->port);
 
     try {
       $request = $client->get('/v1');
