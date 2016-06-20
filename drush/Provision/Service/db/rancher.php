@@ -25,8 +25,27 @@ class Provision_Service_db_rancher extends Provision_Service_db {
    * @return bool
    */
   function create_site_database($creds = array()) {
-    drush_log('Provision_Service_db_rancher::create_site_database()', 'ok');
-    return TRUE;
+
+    // Find docker compose folder and run docker-compose up in it.
+    $cwd = d($this->context->db_server)->http_app_path . '/' . $this->context->uri;
+    drush_log($cwd, 'devshop_log');
+    return d()->service('Process')->process('docker-compose up -d', $cwd, dt('Launching Containers'));
+
+  }
+
+  /**
+   * Called when a site is rolled back or deleted.
+   *
+   * Use this method to trigger the destruction of rancher environments.
+   *
+   * @param array $creds
+   * @return bool
+   */
+  function destroy_site_database($creds = array()) {
+    // Find docker compose folder and run docker-compose up in it.
+    $cwd = d($this->context->db_server)->http_app_path . '/' . $this->context->uri;
+    drush_log($cwd, 'devshop_log');
+    return d()->service('Process')->process('docker-compose kill', $cwd, dt('Destroying Containers'));
   }
 
   function can_create_database() {
