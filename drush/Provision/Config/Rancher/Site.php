@@ -40,7 +40,7 @@ class Provision_Config_Rancher_Site extends Provision_Config_Rancher {
   }
 
   function filename() {
-    return $this->data['server']->http_app_path . '/' . $this->uri . '/docker-compose.yml';
+    return $this->data['server']->http_app_path . '/' . d()->project . '_' . d()->environment . '/docker-compose.yml';
   }
 
   function generate_site_credentials() {
