@@ -12,10 +12,8 @@ class Provision_Config_Rancher_Site extends Provision_Config_Rancher {
   function process() {
     parent::process();
 
-    $project_name = d('@' . $this->uri)->project;
-    $environment_name = d('@' . $this->uri)->environment;
-
-    if ($environment = d('@project_' . $project_name)->getEnvironment($environment_name)) {
+    $project = $this->thisProject();
+    if ($environment = $this->thisEnvironment()) {
 
       $this->data['environment'] = $environment;
 
@@ -23,7 +21,7 @@ class Provision_Config_Rancher_Site extends Provision_Config_Rancher {
       $this->data['virtual_hosts'] = implode(',', $environment->domains);
 
       // Doc Root
-      $this->data['document_root'] = d('@project_' . $project_name)->project['drupal_path'];
+      $this->data['document_root'] = $project->drupal_path;
 
       // MySQL Root password, generated.
       $this->data['mysql_root_password'] = provision_password(32);
@@ -66,5 +64,27 @@ class Provision_Config_Rancher_Site extends Provision_Config_Rancher {
     $creds['db_user'] = drush_set_option('db_user', $creds['db_name'], 'site');
 
     return $creds;
+  }
+
+  /**
+   * Helper to return the active project.
+   *
+   * @return object
+   */
+  function thisProject() {
+    return (object) $project_name = d('@' . $this->uri)->project;
+  }
+
+  /**
+   * Helper to return the active environment.
+   *
+   * @return mixed
+   */
+  function thisEnvironment() {
+    $project_name = d('@' . $this->uri)->project;
+    $environment_name = d('@' . $this->uri)->environment;
+    if ($environment = d('@project_' . $project_name)->getEnvironment($environment_name)) {
+      return $environment;
+    }
   }
 }
