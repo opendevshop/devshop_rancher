@@ -27,7 +27,8 @@ class Provision_Service_db_rancher extends Provision_Service_db {
   function create_site_database($creds = array()) {
 
     // Find docker compose folder and run docker-compose up in it.
-    $cwd = d($this->context->db_server)->http_app_path . '/' . $this->context->uri;
+    $cwd = d($this->context->db_server)->http_app_path . '/' . d()->project . '_' . d()->environment;
+
     return d()->service('Process')->process('docker-compose up -d', $cwd, dt('Launching Containers'));
 
   }
@@ -42,8 +43,14 @@ class Provision_Service_db_rancher extends Provision_Service_db {
    */
   function destroy_site_database($creds = array()) {
     // Find docker compose folder and run docker-compose up in it.
-    $cwd = d($this->context->db_server)->http_app_path . '/' . $this->context->uri;
-    return d()->service('Process')->process('docker-compose kill', $cwd, dt('Destroying Containers'));
+    $cwd = d($this->context->db_server)->http_app_path . '/' . d()->project . '_' . d()->environment;
+
+    // Kill Containers
+    d()->service('Process')->process('docker-compose kill', $cwd, dt('Destroying Containers'));
+
+    // Remove containers
+    d()->service('Process')->process('docker-compose rm -f -v -a', $cwd, dt('Destroying Containers'));
+    
   }
 
   function can_create_database() {
