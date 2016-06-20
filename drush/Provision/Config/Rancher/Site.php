@@ -33,8 +33,6 @@ class Provision_Config_Rancher_Site extends Provision_Config_Rancher {
       $this->data['host_gid'] = '12345';
 
       $this->data['authorized_keys'] = file_get_contents('/var/aegir/.ssh/id_rsa.pub');
-
-      drush_log($project_name . print_r($environment, 1), 'devshop_ok');
     }
     else {
       return;
