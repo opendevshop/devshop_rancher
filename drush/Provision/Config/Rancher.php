@@ -13,7 +13,7 @@ class Provision_Config_Rancher extends Provision_Config {
   }
 
   function unlink() {
-    parent::unlink();
+//    parent::unlink();
 //    $this->data['server']->sync($this->filename());
   }
 }
