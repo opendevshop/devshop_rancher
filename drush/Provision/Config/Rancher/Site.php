@@ -56,8 +56,11 @@ class Provision_Config_Rancher_Site extends Provision_Config_Rancher {
 
     //TODO - this should not be here at all
     $creds['db_type'] = drush_set_option('db_type', $db_type, 'site');
-    $creds['db_host'] = drush_set_option('db_host', $this->server->remote_host, 'site');
-    $creds['db_port'] = drush_set_option('db_port', $this->server->db_port, 'site');
+
+    // Because we are using docker, host and port are static
+    $creds['db_host'] = drush_set_option('db_host','database', 'site');
+    $creds['db_port'] = drush_set_option('db_port', 3306, 'site');
+    
     $creds['db_passwd'] = drush_set_option('db_passwd', provision_password(), 'site');
     $creds['db_name'] = drush_set_option('db_name', 'drupal', 'site');
     $creds['db_user'] = drush_set_option('db_user', $creds['db_name'], 'site');
