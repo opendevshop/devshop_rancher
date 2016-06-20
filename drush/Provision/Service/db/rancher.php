@@ -28,7 +28,6 @@ class Provision_Service_db_rancher extends Provision_Service_db {
 
     // Find docker compose folder and run docker-compose up in it.
     $cwd = d($this->context->db_server)->http_app_path . '/' . $this->context->uri;
-    drush_log($cwd, 'devshop_log');
     return d()->service('Process')->process('docker-compose up -d', $cwd, dt('Launching Containers'));
 
   }
@@ -44,7 +43,6 @@ class Provision_Service_db_rancher extends Provision_Service_db {
   function destroy_site_database($creds = array()) {
     // Find docker compose folder and run docker-compose up in it.
     $cwd = d($this->context->db_server)->http_app_path . '/' . $this->context->uri;
-    drush_log($cwd, 'devshop_log');
     return d()->service('Process')->process('docker-compose kill', $cwd, dt('Destroying Containers'));
   }
 
