@@ -31,6 +31,10 @@ class Provision_Service_db_rancher extends Provision_Service_db {
    */
   function create_site_database($creds = array()) {
 
+    // Write docker compose file.
+    $config = new Provision_Config_Rancher_Site(d()->name, drush_get_context('site'));
+    $config->write();
+
     // Find docker compose folder and run docker-compose up in it.
     $cwd = d($this->context->db_server)->http_app_path . '/' . d()->project . '_' . d()->environment;
 
