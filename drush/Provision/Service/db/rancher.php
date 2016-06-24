@@ -48,8 +48,12 @@ class Provision_Service_db_rancher extends Provision_Service_db {
 
     $ip_address = $data->NetworkSettings->IPAddress;
 
-    drush_log('Container IP Address found.' .$ip_address, 'devshop_ok');
+    drush_log('Container IP Address found. Writing new drushrc file.' .$ip_address, 'devshop_ok');
 
+    $config = new Provision_Config_Drushrc_Site(d()->name, array('db_host' => $ip_address));
+    $config->write();
+
+    die;
 //    $config = new Provision_Config_Drupal_Settings(d()->name, drush_get_context('site'));
 //    $config->write();
     
