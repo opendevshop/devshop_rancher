@@ -26,17 +26,22 @@ class hostingService_rancher_server extends hostingService_rancher {
   protected $has_port = TRUE;
 
   function default_port() {
-    return 8000;
+    return 8080;
   }
 
   public function view(&$render) {
     unset($render['port']);
+    unset($render['title']);
 
     $url = "http://" . $this->server->title . ':' . $this->port;
     $render['port'] = array(
       '#type' => 'item',
       '#title' => t('Rancher URL'),
-      '#markup' => l($url, $url),
+      '#markup' => l($url, $url, array(
+        'attributes' => array(
+          'target' => '_blank',
+        ),
+      )),
     );
   }
 
