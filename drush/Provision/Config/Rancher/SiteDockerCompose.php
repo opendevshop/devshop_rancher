@@ -16,20 +16,23 @@ class Provision_Config_Rancher_SiteDockerCompose extends Provision_Config_Ranche
 
   function generateYml(){
 
-    $project = (object) d('@project_' . $this->context->project)->project;
-    if (empty($project->environments)) {
-      return drush_set_error(DRUSH_APPLICATION_ERROR, dt('No environments found in your project. Save project settings to trigger a project verify.'));
-    }
-    $environment = (object) $project->environments[$this->context->environment];
+//    $project = (object) d('@project_' . $this->context->project)->project;
+//    if (empty($project->environments)) {
+//      return drush_set_error(DRUSH_APPLICATION_ERROR, dt('No environments found in your project. Save project settings to trigger a project verify.'));
+//    }
+//    $environment = (object) $project->environments[$this->context->environment];
 
-    $source_root = $environment->repo_root;
+//    $source_root = $environment->repo_root;
+//$this->context->repo_root;
 
-    if (!empty($project->drupal_path)) {
-      $document_root_relative = $project->drupal_path;
-      $document_root = $source_root.'/'.$project->drupal_path;
+
+
+    if ($this->context->root != $this->context->repo_path) {
+      $document_root_relative = str_replace($this->context->repo_path, '', $this->context->root);
+      $document_root = $this->context->root;
     } else {
       $document_root_relative = '';
-      $document_root = $source_root;
+      $document_root = $this->context->root;
     }
 
     // @TODO: Load authorized keys from users allowed to acces the project.
@@ -37,13 +40,9 @@ class Provision_Config_Rancher_SiteDockerCompose extends Provision_Config_Ranche
 
 
     // Get Virtual Hosts array
-    if (!empty($environment->domains)) {
-      $hosts = implode(',', $environment->domains);
+    if (!empty($this->context->aliases)) {
+      $hosts = implode(',', $this->context->aliases);
     }
-
-    $environment_label = $project->name . ':' .
-      $environment->name;
-
 
     $compose = array();
     $compose['load'] = array(
@@ -69,7 +68,7 @@ class Provision_Config_Rancher_SiteDockerCompose extends Provision_Config_Ranche
         'database',
       ),
       'volumes' => array(
-        "{$environment->repo_root}:/app",
+        "{$this->context->repo_path}:/app",
       ),
       'environment' => array(
         'HOST_UID' => posix_getuid(),
@@ -103,7 +102,7 @@ class Provision_Config_Rancher_SiteDockerCompose extends Provision_Config_Ranche
       ),
       'volumes' => array(
         "$document_root:/var/www/html",
-        "$source_root:/source",
+        "{$this->context->repo_path}:/source",
       ),
       'environment' => array(
         'AUTHORIZED_KEYS' => $ssh_authorized_keys,
