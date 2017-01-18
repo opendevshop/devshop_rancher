@@ -21,11 +21,10 @@ class Provision_Service_db_rancherdb extends Provision_Service_db_mysql {
    * @return bool|\PDO
    */
   function connect() {
+    $this->conn = null;
     return TRUE;
-
     // This method usually fires off the other methods can_create_databases and can_grant_privileges.
     // As long as it doesn't call the parent method, we don't need to override those two.
-    drush_log('Provision_Service_db_rancher::verify_server_cmd()', 'devshop_log');
   }
 
   /**
@@ -38,12 +37,12 @@ class Provision_Service_db_rancherdb extends Provision_Service_db_mysql {
    */
   function create_site_database($creds = array()) {
 
-    // Write Docker compose file
-    $file = new Provision_Config_Rancher_Site($this->name);
-    $file->write();
-    
     // Find docker compose folder and run docker-compose up in it.
-    $cwd = d($this->context->db_server)->http_app_path . '/' . d()->project . '_' . d()->environment;
+    $cwd = $this->context->platform->web_server->http_app_path . '/' . d()->project . '/' . d()->environment;
+    
+    drush_log('cwd:' . $cwd, 'devshop_ok');
+//    drush_log('http_app_path:' . print_r($this->context->platform->web_server->http_app_path, 1), 'devshop_ok');
+    d()->service('Process')->process('docker-compose up -d', $cwd, dt('Launching Containers'));
 
     return d()->service('Process')->process('docker-compose up -d', $cwd, dt('Launching Containers'));
 
