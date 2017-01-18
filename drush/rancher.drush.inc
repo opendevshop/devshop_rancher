@@ -34,8 +34,8 @@ function rancher_provision_services() {
  * implementation of provision_verify
  */
 function drush_rancher_pre_provision_verify() {
+    if (d()->type === 'platform' && d()->web_server->http_service_type == 'rancherhttp') {
 
-    if (d()->type === 'platform' && !empty(d()->web_server->http_service_type == 'rancherhttp')) {
       // Write Docker Compose config file.
       $environment = d()->project->project->environments[d()->environment];
       $DockerCompose = new Provision_Config_Rancher_SiteDockerCompose(d()->name, $environment);
