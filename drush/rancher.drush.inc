@@ -29,3 +29,20 @@ function rancher_provision_register_autoload() {
 function rancher_provision_services() {
   rancher_provision_register_autoload();
 }
+
+/**
+ * implementation of provision_verify
+ */
+function drush_rancher_pre_provision_verify() {
+    if (d()->type === 'platform' && d()->web_server->http_service_type == 'rancherhttp') {
+
+      // Write Docker Compose config file.
+      $environment = d()->project->project->environments[d()->environment];
+      $DockerCompose = new Provision_Config_Rancher_SiteDockerCompose(d()->name, $environment);
+      $DockerCompose->write();
+
+      // Write Rancher Compose config file.
+      $rancherCompose = new Provision_Config_Rancher_SiteRancherCompose(d()->name, d()->project);
+      $rancherCompose->write();
+    }
+}
